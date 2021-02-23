@@ -10,12 +10,17 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import br.com.mc.cursomc.dao.CategoriaDAO;
 import br.com.mc.cursomc.dao.CidadeDAO;
+import br.com.mc.cursomc.dao.ClienteDAO;
+import br.com.mc.cursomc.dao.EnderecoDAO;
 import br.com.mc.cursomc.dao.EstadoDAO;
 import br.com.mc.cursomc.dao.ProdutoDAO;
 import br.com.mc.cursomc.domain.Categoria;
 import br.com.mc.cursomc.domain.Cidade;
+import br.com.mc.cursomc.domain.Cliente;
+import br.com.mc.cursomc.domain.Endereco;
 import br.com.mc.cursomc.domain.Estado;
 import br.com.mc.cursomc.domain.Produto;
+import br.com.mc.cursomc.domain.enums.TipoCliente;
 
 @SpringBootApplication
 public class CursomcApplication implements CommandLineRunner {
@@ -32,6 +37,10 @@ public class CursomcApplication implements CommandLineRunner {
 	CidadeDAO ciddao;
 	@Autowired
 	EstadoDAO estdao;
+	@Autowired
+	EnderecoDAO enddao;
+	@Autowired
+	ClienteDAO clidao;
 	
 	@Override
 	public void run(String... args) throws Exception {
@@ -108,6 +117,19 @@ public class CursomcApplication implements CommandLineRunner {
 		ciddao.saveAll(estInst.get("SP").getCidades());
 		ciddao.saveAll(estInst.get("MG").getCidades());
 		ciddao.saveAll(estInst.get("RJ").getCidades());
+		
+		
+		Cliente cli1 = new Cliente(null, "José Antônio Santos", "jas@hotmail.com", "11111111111", TipoCliente.PESSOAFISICA);
+		cli1.getTelefones().addAll(Arrays.asList("(11) 99999-9999", "(11) 2323-2323"));
+
+		Endereco end1 = new Endereco(null, "Rua Um", "1", null, "Bairro 1", "01111-001", cid11, cli1);
+		Endereco end2 = new Endereco(null, "Rua Dois", "2", null, "Bairro 2", "02222-002", cid12, cli1);
+		
+		cli1.getEnderecos().add(end1);
+		cli1.getEnderecos().add(end2);
+		
+		clidao.save(cli1);
+		enddao.saveAll(cli1.getEnderecos());
 		
 	}
 	
