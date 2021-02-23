@@ -1,8 +1,7 @@
 package br.com.mc.cursomc;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+import java.util.TreeMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -10,8 +9,12 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import br.com.mc.cursomc.dao.CategoriaDAO;
+import br.com.mc.cursomc.dao.CidadeDAO;
+import br.com.mc.cursomc.dao.EstadoDAO;
 import br.com.mc.cursomc.dao.ProdutoDAO;
 import br.com.mc.cursomc.domain.Categoria;
+import br.com.mc.cursomc.domain.Cidade;
+import br.com.mc.cursomc.domain.Estado;
 import br.com.mc.cursomc.domain.Produto;
 
 @SpringBootApplication
@@ -25,6 +28,10 @@ public class CursomcApplication implements CommandLineRunner {
 	CategoriaDAO catdao;
 	@Autowired
 	ProdutoDAO proddao;
+	@Autowired
+	CidadeDAO ciddao;
+	@Autowired
+	EstadoDAO estdao;
 	
 	@Override
 	public void run(String... args) throws Exception {
@@ -32,14 +39,85 @@ public class CursomcApplication implements CommandLineRunner {
 		Categoria cat2 = new Categoria(null, "Escritório");
 		
 		Produto p1 = new Produto(null, "Computador", "Computador Desktop completo", 2599.99);
-		p1.addCategorias(cat1);
+		addCategorias(p1, cat1);
 		Produto p2 = new Produto(null, "Impressora", "Impressora jato de tinta", 34.99);
-		p2.addCategorias(cat1, cat2);
+		addCategorias(p2, cat1, cat2);
 		Produto p3 = new Produto(null, "Mouse", "Mouse ótico com fio, USB", 24.99);
-		p3.addCategorias(cat1);
+		addCategorias(p3, cat1);
 		
 		catdao.saveAll(Arrays.asList(cat1, cat2));
 		proddao.saveAll(Arrays.asList(p1, p2, p3));
+		
+		TreeMap<String, String> estados = new TreeMap<>();
+		estados.put("AC", "Acre");
+		estados.put("AL", "Alagoas");
+		estados.put("AP", "Amapá");
+		estados.put("AM", "Amazonas");
+		estados.put("BA", "Bahia");
+		estados.put("CE", "Ceará");
+		estados.put("DF", "Distrito Federal");
+		estados.put("ES", "Espírito Santo");
+		estados.put("GO", "Goiás");
+		estados.put("MA", "Maranhão");
+		estados.put("MT", "Mato Grosso");
+		estados.put("MS", "Mato Grosso do Sul");
+		estados.put("MG", "Minas Gerais");
+		estados.put("PA", "Pará");
+		estados.put("PB", "Paraíba");
+		estados.put("PR", "Paraná");
+		estados.put("PE", "Pernambuco");
+		estados.put("PI", "Piauí");
+		estados.put("RJ", "Rio de Janeiro");
+		estados.put("RN", "Rio Grande do Norte");
+		estados.put("RS", "Rio Grande do Sul");
+		estados.put("RO", "Rondônia");
+		estados.put("RR", "Roraima");
+		estados.put("SC", "Santa Catarina");
+		estados.put("SP", "São Paulo");
+		estados.put("SE", "Sergipe");
+		estados.put("TO", "Tocantins");
+		
+
+		TreeMap<String, Estado> estInst = new TreeMap<>();
+		
+		for (String uf : estados.keySet()) {
+			Estado est = new Estado(null, uf, estados.get(uf));
+			estInst.put(uf, est);
+			
+		}
+
+		Cidade cid1 = new Cidade(null, "São Paulo", estInst.get("SP"));
+		Cidade cid2 = new Cidade(null, "Campinas", estInst.get("SP"));
+		Cidade cid3 = new Cidade(null, "Santos", estInst.get("SP"));
+		Cidade cid4 = new Cidade(null, "Araraquara", estInst.get("SP"));
+		estInst.get("SP").getCidades().addAll(Arrays.asList(cid1, cid2, cid3, cid4));
+
+		Cidade cid5 = new Cidade(null, "Belo Horizonte", estInst.get("MG"));
+		Cidade cid6 = new Cidade(null, "Juiz de Fora", estInst.get("MG"));
+		Cidade cid7 = new Cidade(null, "Três Corações", estInst.get("MG"));
+		Cidade cid8 = new Cidade(null, "Uberlândia", estInst.get("MG"));
+		estInst.get("MG").getCidades().addAll(Arrays.asList(cid5, cid6, cid7, cid8));
+		
+		Cidade cid9 = new Cidade(null, "Rio de Janeiro", estInst.get("RJ"));
+		Cidade cid10 = new Cidade(null, "Niterói", estInst.get("RJ"));
+		Cidade cid11 = new Cidade(null, "São Gonçalo", estInst.get("RJ"));
+		Cidade cid12 = new Cidade(null, "Nova Igauçu", estInst.get("RJ"));
+		estInst.get("RJ").getCidades().addAll(Arrays.asList(cid9, cid10, cid11, cid12));
+		
+		estdao.saveAll(estInst.values());
+		ciddao.saveAll(estInst.get("SP").getCidades());
+		ciddao.saveAll(estInst.get("MG").getCidades());
+		ciddao.saveAll(estInst.get("RJ").getCidades());
+		
+	}
+	
+
+	
+	public void addCategorias(Produto p, Categoria... cats) {
+		for (Categoria c : cats) {
+			p.getCategorias().add(c);
+			c.getProdutos().add(p);
+		}
 	}
 
 }
