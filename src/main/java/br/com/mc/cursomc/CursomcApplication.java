@@ -1,6 +1,7 @@
 package br.com.mc.cursomc;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.TreeMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,13 +14,20 @@ import br.com.mc.cursomc.dao.CidadeDAO;
 import br.com.mc.cursomc.dao.ClienteDAO;
 import br.com.mc.cursomc.dao.EnderecoDAO;
 import br.com.mc.cursomc.dao.EstadoDAO;
+import br.com.mc.cursomc.dao.PagamentoDAO;
+import br.com.mc.cursomc.dao.PedidoDAO;
 import br.com.mc.cursomc.dao.ProdutoDAO;
 import br.com.mc.cursomc.domain.Categoria;
 import br.com.mc.cursomc.domain.Cidade;
 import br.com.mc.cursomc.domain.Cliente;
 import br.com.mc.cursomc.domain.Endereco;
 import br.com.mc.cursomc.domain.Estado;
+import br.com.mc.cursomc.domain.Pagamento;
+import br.com.mc.cursomc.domain.PagamentoBoleto;
+import br.com.mc.cursomc.domain.PagamentoCartao;
+import br.com.mc.cursomc.domain.Pedido;
 import br.com.mc.cursomc.domain.Produto;
+import br.com.mc.cursomc.domain.enums.EstadoPagamento;
 import br.com.mc.cursomc.domain.enums.TipoCliente;
 
 @SpringBootApplication
@@ -41,6 +49,10 @@ public class CursomcApplication implements CommandLineRunner {
 	EnderecoDAO enddao;
 	@Autowired
 	ClienteDAO clidao;
+	@Autowired
+	PedidoDAO peddao;
+	@Autowired
+	PagamentoDAO pagdao;
 	
 	@Override
 	public void run(String... args) throws Exception {
@@ -130,6 +142,22 @@ public class CursomcApplication implements CommandLineRunner {
 		
 		clidao.save(cli1);
 		enddao.saveAll(cli1.getEnderecos());
+		
+		
+		Pedido ped1 = new Pedido(null, new Date(), cli1, end2);
+		Pagamento pag1 = new PagamentoBoleto(null, EstadoPagamento.PENDENTE, ped1, new Date(System.currentTimeMillis() + 24*1440000), null);
+		ped1.setPagamento(pag1); 
+		
+		
+		Pedido ped2 = new Pedido(null, new Date(System.currentTimeMillis() - 24*1440000), cli1, end2);
+		Pagamento pag2 = new PagamentoCartao(null, EstadoPagamento.QUITADO, ped2, 5);
+		ped2.setPagamento(pag2);
+		
+		cli1.getPedidos().add(ped1);
+		cli1.getPedidos().add(ped2);
+		
+		peddao.saveAll(Arrays.asList(ped1, ped2));
+		pagdao.saveAll(Arrays.asList(pag1, pag2));
 		
 	}
 	
