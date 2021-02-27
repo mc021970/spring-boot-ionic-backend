@@ -14,6 +14,7 @@ import br.com.mc.cursomc.dao.CidadeDAO;
 import br.com.mc.cursomc.dao.ClienteDAO;
 import br.com.mc.cursomc.dao.EnderecoDAO;
 import br.com.mc.cursomc.dao.EstadoDAO;
+import br.com.mc.cursomc.dao.ItemPedidoDAO;
 import br.com.mc.cursomc.dao.PagamentoDAO;
 import br.com.mc.cursomc.dao.PedidoDAO;
 import br.com.mc.cursomc.dao.ProdutoDAO;
@@ -22,6 +23,7 @@ import br.com.mc.cursomc.domain.Cidade;
 import br.com.mc.cursomc.domain.Cliente;
 import br.com.mc.cursomc.domain.Endereco;
 import br.com.mc.cursomc.domain.Estado;
+import br.com.mc.cursomc.domain.ItemPedido;
 import br.com.mc.cursomc.domain.Pagamento;
 import br.com.mc.cursomc.domain.PagamentoBoleto;
 import br.com.mc.cursomc.domain.PagamentoCartao;
@@ -53,6 +55,8 @@ public class CursomcApplication implements CommandLineRunner {
 	PedidoDAO peddao;
 	@Autowired
 	PagamentoDAO pagdao;
+	@Autowired
+	ItemPedidoDAO itemdao;
 	
 	@Override
 	public void run(String... args) throws Exception {
@@ -159,6 +163,23 @@ public class CursomcApplication implements CommandLineRunner {
 		peddao.saveAll(Arrays.asList(ped1, ped2));
 		pagdao.saveAll(Arrays.asList(pag1, pag2));
 		
+		
+		ItemPedido item1 = new ItemPedido(ped1, p1, 0, 1, p1.getPreco());
+		ItemPedido item2 = new ItemPedido(ped1, p2, 0.1, 1, p2.getPreco());
+		ItemPedido item3 = new ItemPedido(ped1, p3, 0, 2, p3.getPreco());
+		
+		ItemPedido item4 = new ItemPedido(ped2, p2, 0.05, 2, p2.getPreco());
+		
+		ped1.getItens().addAll(Arrays.asList(item1, item2, item3));
+		ped2.getItens().addAll(Arrays.asList(item4));
+		System.out.println("Ped1 Total: " + ped1.getTotal());
+		System.out.println("Ped2 Total: " + ped2.getTotal());
+		
+		p1.getItens().add(item1);
+		p2.getItens().addAll(Arrays.asList(item2, item4));
+		p3.getItens().add(item3);
+		
+		itemdao.saveAll(Arrays.asList(item1, item2, item3, item4));
 	}
 	
 
