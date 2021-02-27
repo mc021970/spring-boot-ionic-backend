@@ -1,0 +1,43 @@
+package br.com.mc.cursomc.resources;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import br.com.mc.cursomc.domain.Pedido;
+import br.com.mc.cursomc.services.PedidoService;
+
+@RestController
+@RequestMapping(value="/pedidos")
+public class PedidoResource {
+
+	@Autowired
+	private PedidoService pedserv;
+
+	@GetMapping
+	public List<Pedido> findAll() {
+		System.out.println("Pedidos: buscando todos");
+		return pedserv.todos();
+	}
+	
+	@GetMapping("{id}")
+	public ResponseEntity<Pedido> find(@PathVariable Integer id) {
+		System.out.println("Pedidos: buscando: " + id);
+		Pedido cli = pedserv.buscar(id);
+		return ResponseEntity.ok(cli);
+	}
+	
+	@PostMapping
+	public Pedido novo(@RequestBody Pedido cli) {
+		System.out.println("Pedido: " + cli);
+		return pedserv.criar(cli);
+	}
+	
+}
