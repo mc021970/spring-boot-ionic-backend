@@ -27,6 +27,7 @@ public class CategoriaService {
 	}
 	
 	public Categoria criar(Categoria cat) {
+		cat.setId(null);
 		return dao.save(cat);
 	}
 }

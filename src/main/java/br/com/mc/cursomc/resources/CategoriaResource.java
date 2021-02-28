@@ -1,5 +1,6 @@
 package br.com.mc.cursomc.resources;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.mc.cursomc.domain.Categoria;
 import br.com.mc.cursomc.services.CategoriaService;
@@ -36,9 +38,11 @@ public class CategoriaResource {
 	}
 	
 	@PostMapping
-	public Categoria novo(@RequestBody Categoria cat) {
+	public ResponseEntity<Void> insert(@RequestBody Categoria cat) {
 		System.out.println("Categoria: " + cat);
-		return catserv.criar(cat);
+		Categoria catNova = catserv.criar(cat);
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(catNova.getId()).toUri();
+		return ResponseEntity.created(uri).build();
 	}
 	
 }
