@@ -5,10 +5,14 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import br.com.mc.cursomc.dao.CategoriaDAO;
 import br.com.mc.cursomc.domain.Categoria;
+import br.com.mc.cursomc.dto.CategoriaDTO;
 import br.com.mc.cursomc.services.exception.DataIntegrityException;
 import br.com.mc.cursomc.services.exception.ObjectNotFoundException;
 
@@ -26,6 +30,11 @@ public class CategoriaService {
 	
 	public List<Categoria> findAll() {
 		return dao.findAll();
+	}
+	
+	public Page<Categoria> findPage(Integer page, Integer linesPerPage, String orderBy, String direction) {
+		PageRequest pr = PageRequest.of(page, linesPerPage, Direction.fromString(direction), orderBy);
+		return dao.findAll(pr);
 	}
 	
 	public Categoria insert(Categoria cat) {

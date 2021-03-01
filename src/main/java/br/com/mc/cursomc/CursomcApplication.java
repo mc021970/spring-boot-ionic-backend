@@ -62,6 +62,14 @@ public class CursomcApplication implements CommandLineRunner {
 	public void run(String... args) throws Exception {
 		Categoria cat1 = new Categoria(null, "Informática");
 		Categoria cat2 = new Categoria(null, "Escritório");
+		Categoria cat3 = new Categoria(null, "Ferramentas");
+		Categoria cat4 = new Categoria(null, "Malas");
+		Categoria cat5 = new Categoria(null, "Acessórios");
+		Categoria cat6 = new Categoria(null, "Celulares");
+		Categoria cat7 = new Categoria(null, "Programas");
+		Categoria cat8 = new Categoria(null, "Móveis");
+		Categoria cat9 = new Categoria(null, "Limpeza");
+		Categoria cat10 = new Categoria(null, "Decoração");
 		
 		Produto p1 = new Produto(null, "Computador", "Computador Desktop completo", 2599.99);
 		addCategorias(p1, cat1);
@@ -70,7 +78,7 @@ public class CursomcApplication implements CommandLineRunner {
 		Produto p3 = new Produto(null, "Mouse", "Mouse ótico com fio, USB", 24.99);
 		addCategorias(p3, cat1);
 		
-		catdao.saveAll(Arrays.asList(cat1, cat2));
+		catdao.saveAll(Arrays.asList(cat1, cat2, cat3, cat4, cat5, cat6, cat7, cat8, cat9, cat10));
 		proddao.saveAll(Arrays.asList(p1, p2, p3));
 		
 		TreeMap<String, String> estados = new TreeMap<>();
