@@ -3,7 +3,8 @@ package br.com.mc.cursomc.resources;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -62,7 +63,8 @@ public class CategoriaResource {
 	}
 	
 	@PostMapping
-	public ResponseEntity<Void> insert(@RequestBody Categoria cat) {
+	public ResponseEntity<Void> insert(@Valid @RequestBody CategoriaDTO catdto) {
+		Categoria cat = catserv.fromDTO(catdto);
 		System.out.println("Categorias: Criando: " + cat);
 		Categoria catNova = catserv.insert(cat);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(catNova.getId()).toUri();
@@ -70,7 +72,8 @@ public class CategoriaResource {
 	}
 	
 	@PutMapping("{id}")
-	public ResponseEntity<Void> update(@RequestBody Categoria cat, @PathVariable Integer id) {
+	public ResponseEntity<Void> update(@Valid @RequestBody CategoriaDTO catdto, @PathVariable Integer id) {
+		Categoria cat = catserv.fromDTO(catdto);
 		System.out.println("Categorias: Atualizando: " + cat);
 		cat.setId(id);
 		cat = catserv.update(cat);
