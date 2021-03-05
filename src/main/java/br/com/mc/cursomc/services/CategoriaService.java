@@ -37,14 +37,14 @@ public class CategoriaService {
 		return dao.findAll(pr);
 	}
 	
-	public Categoria insert(Categoria cat) {
-		cat.setId(null);
-		return dao.save(cat);
+	public Categoria insert(Categoria obj) {
+		obj.setId(null);
+		return dao.save(obj);
 	}
 	
-	public Categoria update(Categoria cat) {
-		find(cat.getId());
-		return dao.save(cat);
+	public Categoria update(Categoria obj) {
+		find(obj.getId());
+		return dao.save(obj);
 	}
 	
 	public void delete(Integer id) {
