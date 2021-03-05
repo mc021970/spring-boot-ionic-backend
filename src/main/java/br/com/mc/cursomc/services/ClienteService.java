@@ -9,10 +9,16 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.com.mc.cursomc.dao.ClienteDAO;
+import br.com.mc.cursomc.dao.EnderecoDAO;
+import br.com.mc.cursomc.domain.Cidade;
 import br.com.mc.cursomc.domain.Cliente;
+import br.com.mc.cursomc.domain.Endereco;
+import br.com.mc.cursomc.domain.enums.TipoCliente;
 import br.com.mc.cursomc.dto.ClienteDTO;
+import br.com.mc.cursomc.dto.ClienteNewDTO;
 import br.com.mc.cursomc.services.exception.DataIntegrityException;
 import br.com.mc.cursomc.services.exception.ObjectNotFoundException;
 
@@ -21,6 +27,9 @@ public class ClienteService {
 
 	@Autowired
 	private ClienteDAO dao;
+	
+	@Autowired
+	private EnderecoDAO enddao;
 	
 	public Cliente find(Integer id) {
 		 Optional<Cliente> obj = dao.findById(id);
@@ -37,9 +46,12 @@ public class ClienteService {
 		return dao.findAll(pr);
 	}
 	
+	@Transactional
 	public Cliente insert(Cliente obj) {
 		obj.setId(null);
-		return dao.save(obj);
+		obj = dao.save(obj);
+		enddao.saveAll(obj.getEnderecos());
+		return obj;
 	}
 	
 	public Cliente update(Cliente obj) {
@@ -65,5 +77,15 @@ public class ClienteService {
 	
 	public Cliente fromDTO(ClienteDTO dto) {
 		return new Cliente(dto.getId(), dto.getNome(), dto.getEmail(), null, null);
+	}
+	
+	public Cliente fromDTO(ClienteNewDTO dto) {
+		Cliente cli = new Cliente(null, dto.getNome(), dto.getEmail(), dto.getCpfOuCnpj(), TipoCliente.getTipoCliente(dto.getTipo()));
+		Endereco end = new Endereco(null, dto.getLogradouro(), dto.getNumero(), dto.getComplemento(), dto.getBairro(), dto.getCep(), new Cidade(dto.getCidadeId(), null, null), cli);
+		cli.getEnderecos().add(end);
+		cli.getTelefones().add(dto.getTelefone1());
+		if (dto.getTelefone2() != null) cli.getTelefones().add(dto.getTelefone2());
+		if (dto.getTelefone3() != null) cli.getTelefones().add(dto.getTelefone3());
+		return cli;
 	}
 }

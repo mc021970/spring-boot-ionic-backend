@@ -22,6 +22,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.mc.cursomc.domain.Cliente;
 import br.com.mc.cursomc.dto.ClienteDTO;
+import br.com.mc.cursomc.dto.ClienteNewDTO;
 import br.com.mc.cursomc.services.ClienteService;
 
 @RestController
@@ -65,7 +66,7 @@ public class ClienteResource {
 	}
 	
 	@PostMapping
-	public ResponseEntity<Void> insert(@Valid @RequestBody ClienteDTO clidto) {
+	public ResponseEntity<Void> insert(@Valid @RequestBody ClienteNewDTO clidto) {
 		Cliente cli = cliserv.fromDTO(clidto);
 		System.out.println("Clientes: Criando: " + cli);
 		Cliente cliNova = cliserv.insert(cli);
