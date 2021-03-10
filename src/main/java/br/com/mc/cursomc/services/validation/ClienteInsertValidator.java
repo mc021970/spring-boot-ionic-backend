@@ -8,12 +8,19 @@ import javax.validation.ConstraintValidatorContext;
 
 import org.hibernate.validator.internal.constraintvalidators.hv.br.CNPJValidator;
 import org.hibernate.validator.internal.constraintvalidators.hv.br.CPFValidator;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import br.com.mc.cursomc.dao.ClienteDAO;
+import br.com.mc.cursomc.domain.Cliente;
 import br.com.mc.cursomc.domain.enums.TipoCliente;
 import br.com.mc.cursomc.dto.ClienteNewDTO;
 import br.com.mc.cursomc.resources.exception.FieldMessage;
 
 public class ClienteInsertValidator implements ConstraintValidator<ClienteInsert, ClienteNewDTO> {
+	
+	@Autowired
+	private ClienteDAO dao;
+	
 	@Override
 	public void initialize(ClienteInsert ann) {
 	}
@@ -46,6 +53,12 @@ public class ClienteInsertValidator implements ConstraintValidator<ClienteInsert
 			if (!cnpjValido) {
 				errors.add(new FieldMessage("cpfOuCnpj", "Campo CNPJ inválido"));
 			}
+		}
+		
+		Cliente cemail = dao.findByEmail(objDto.getEmail());
+		if (cemail != null) {
+			System.out.println("Encontrou cliente por email: " + cemail);
+			errors.add(new FieldMessage("email", "Email já cadastrado"));
 		}
 
 		for (FieldMessage e : errors) {
