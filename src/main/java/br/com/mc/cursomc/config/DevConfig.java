@@ -1,6 +1,7 @@
 package br.com.mc.cursomc.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -18,13 +19,17 @@ public class DevConfig {
 	
 	@Autowired
 	private DBService dbserv;
+	
+	@Value("spring.jpa.hibernate.ddl-auto")
+	private String strategy;
 
 	@Bean
 	public boolean initDatabase() throws Exception {
-
 		TestUtils.logDestacado("DevConfig.initDatabase()");
-		dbserv.initTestDB();
-		
+
+		if (strategy != null && strategy.startsWith("create")) {
+			dbserv.initTestDB();
+		}
 		return true;
 	}
 }
