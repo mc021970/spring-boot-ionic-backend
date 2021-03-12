@@ -77,9 +77,17 @@ public class CursomcApplication implements CommandLineRunner {
 		addCategorias(p2, cat1, cat2);
 		Produto p3 = new Produto(null, "Mouse", "Mouse ótico com fio, USB", 24.99);
 		addCategorias(p3, cat1);
+		Produto p4 = new Produto(null, "Monitor 22'", "Monitor Full HD 22'", 299.99);
+		addCategorias(p4, cat1);
+		Produto p5 = new Produto(null, "Cadeira de Escritório", "Cadeira de escritório com ajuste de altura e inclinação", 249.99);
+		addCategorias(p5, cat2, cat8, cat10);
+		Produto p6 = new Produto(null, "Mochila Notebook", "Mochila em couro para notebook e acessórios", 99.99);
+		addCategorias(p6, cat4, cat5, cat1);
+		Produto p7 = new Produto(null, "Luminária LED USB", "Luminária LED USB", 39.99);
+		addCategorias(p7, cat1, cat5, cat10);
 		
 		catdao.saveAll(Arrays.asList(cat1, cat2, cat3, cat4, cat5, cat6, cat7, cat8, cat9, cat10));
-		proddao.saveAll(Arrays.asList(p1, p2, p3));
+		proddao.saveAll(Arrays.asList(p1, p2, p3, p4, p5, p6, p7));
 		
 		TreeMap<String, String> estados = new TreeMap<>();
 		estados.put("AC", "Acre");

@@ -49,7 +49,7 @@ public class CategoriaResource {
 			@RequestParam(name = "linesPerPage", defaultValue = "24") Integer linesPerPage, 
 			@RequestParam(name = "orderBy", defaultValue = "nome") String orderBy, 
 			@RequestParam(name = "direction", defaultValue = "ASC") String direction) {
-		System.out.println("Categorias: buscando todas");
+		System.out.println("Categorias: buscando pagina");
 		Page<Categoria> lista = catserv.findPage(page, linesPerPage, orderBy, direction);
 		Page<CategoriaDTO> listadto = lista.map(cat -> new CategoriaDTO(cat));
 		return ResponseEntity.ok(listadto);
