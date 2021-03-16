@@ -71,7 +71,7 @@ public class DBService {
 		
 		Produto p1 = new Produto(null, "Computador", "Computador Desktop completo", 2599.99);
 		addCategorias(p1, cat1);
-		Produto p2 = new Produto(null, "Impressora", "Impressora jato de tinta", 34.99);
+		Produto p2 = new Produto(null, "Impressora", "Impressora jato de tinta", 349.99);
 		addCategorias(p2, cat1, cat2);
 		Produto p3 = new Produto(null, "Mouse", "Mouse ótico com fio, USB", 24.99);
 		addCategorias(p3, cat1);
@@ -122,7 +122,6 @@ public class DBService {
 		for (String uf : estados.keySet()) {
 			Estado est = new Estado(null, uf, estados.get(uf));
 			estInst.put(uf, est);
-			
 		}
 
 		Cidade cid1 = new Cidade(null, "São Paulo", estInst.get("SP"));
@@ -140,7 +139,7 @@ public class DBService {
 		Cidade cid9 = new Cidade(null, "Rio de Janeiro", estInst.get("RJ"));
 		Cidade cid10 = new Cidade(null, "Niterói", estInst.get("RJ"));
 		Cidade cid11 = new Cidade(null, "São Gonçalo", estInst.get("RJ"));
-		Cidade cid12 = new Cidade(null, "Nova Igauçu", estInst.get("RJ"));
+		Cidade cid12 = new Cidade(null, "Nova Iguaçu", estInst.get("RJ"));
 		estInst.get("RJ").getCidades().addAll(Arrays.asList(cid9, cid10, cid11, cid12));
 		
 		estdao.saveAll(estInst.values());
@@ -192,6 +191,9 @@ public class DBService {
 		p1.getItens().add(item1);
 		p2.getItens().addAll(Arrays.asList(item2, item4));
 		p3.getItens().add(item3);
+		
+		System.out.println(ped1);
+		System.out.println(ped2);
 		
 		itemdao.saveAll(Arrays.asList(item1, item2, item3, item4));
 	}

@@ -20,12 +20,12 @@ public class DevConfig {
 	@Autowired
 	private DBService dbserv;
 	
-	@Value("spring.jpa.hibernate.ddl-auto")
+	@Value("${spring.jpa.hibernate.ddl-auto}")
 	private String strategy;
 
 	@Bean
 	public boolean initDatabase() throws Exception {
-		TestUtils.logDestacado("DevConfig.initDatabase()");
+		TestUtils.logDestacado("DevConfig.initDatabase(): strategy=" + strategy);
 
 		if (strategy != null && strategy.startsWith("create")) {
 			dbserv.initTestDB();
