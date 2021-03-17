@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import br.com.mc.cursomc.dao.CategoriaDAO;
 import br.com.mc.cursomc.domain.Categoria;
-import br.com.mc.cursomc.domain.Cliente;
 import br.com.mc.cursomc.dto.CategoriaDTO;
 import br.com.mc.cursomc.services.exception.DataIntegrityException;
 import br.com.mc.cursomc.services.exception.ObjectNotFoundException;

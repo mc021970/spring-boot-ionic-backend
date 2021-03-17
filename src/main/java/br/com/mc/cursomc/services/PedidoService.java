@@ -83,7 +83,7 @@ public class PedidoService {
 		
 		itemdao.saveAll(pedido.getItens());
 		System.out.println("Inseriu Pedido: " + pedido);
-		emailserv.sendOrderConfirmationMessage(pedido);
+		emailserv.sendOrderConfirmationHtmlEmail(pedido);
 		return pedido;
 	}
 }
