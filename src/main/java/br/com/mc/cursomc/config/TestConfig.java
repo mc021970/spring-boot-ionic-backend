@@ -6,6 +6,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 import br.com.mc.cursomc.services.DBService;
+import br.com.mc.cursomc.services.EmailService;
+import br.com.mc.cursomc.services.MockEMailService;
 import br.com.mc.cursomc.utils.TestUtils;
 
 @Configuration
@@ -26,5 +28,10 @@ public class TestConfig {
 		dbserv.initTestDB();
 		
 		return true;
+	}
+	
+	@Bean
+	public EmailService emailService() {
+		return new MockEMailService();
 	}
 }

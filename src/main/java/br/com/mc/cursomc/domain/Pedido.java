@@ -149,7 +149,7 @@ public class Pedido implements Serializable {
 		builder.append("Pedido: ");
 		builder.append(this.getId());
 		builder.append(", Data/Hora: ");
-		builder.append(sdf.format(instante));
+		if (instante != null) builder.append(sdf.format(instante));
 		builder.append(", Cliente: ");
 		builder.append(this.getCliente().getNome());
 		builder.append(", Pagamento: ");

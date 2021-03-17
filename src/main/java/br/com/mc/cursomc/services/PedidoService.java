@@ -40,6 +40,11 @@ public class PedidoService {
 	@Autowired
 	private ItemPedidoDAO itemdao;
 	
+	@Autowired
+	private EmailService emailserv;
+	
+	
+	
 	public Pedido buscar(Integer id) {
 		 Optional<Pedido> obj = dao.findById(id);
 		 return obj.orElseThrow(() -> new ObjectNotFoundException(
@@ -78,6 +83,7 @@ public class PedidoService {
 		
 		itemdao.saveAll(pedido.getItens());
 		System.out.println("Inseriu Pedido: " + pedido);
+		emailserv.sendOrderConfirmationMessage(pedido);
 		return pedido;
 	}
 }

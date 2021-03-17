@@ -1,0 +1,12 @@
+{"properties": [
+  {
+    "name": "email.default.sender",
+    "type": "java.lang.String",
+    "description": "Remetente dos emails do sistema"
+  },
+  {
+    "name": "email.default.destination",
+    "type": "java.lang.String",
+    "description": "Destinatário padrão dos emails do sistema"
+  }
+]}
