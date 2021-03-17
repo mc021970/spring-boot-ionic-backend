@@ -148,7 +148,7 @@ public class DBService {
 		ciddao.saveAll(estInst.get("RJ").getCidades());
 		
 		
-		Cliente cli1 = new Cliente(null, "José Antônio Santos", "jas@hotmail.com", "11111111111", TipoCliente.PESSOAFISICA);
+		Cliente cli1 = new Cliente(null, "José Antônio Santos", "mauriciocz@hotmail.com", "11111111111", TipoCliente.PESSOAFISICA);
 		cli1.getTelefones().addAll(Arrays.asList("(11) 99999-9999", "(11) 2323-2323"));
 
 		Endereco end1 = new Endereco(null, "Rua Um", "1", null, "Bairro 1", "01111-001", cid11, cli1);
