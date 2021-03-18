@@ -29,6 +29,7 @@ import br.com.mc.cursomc.domain.PagamentoCartao;
 import br.com.mc.cursomc.domain.Pedido;
 import br.com.mc.cursomc.domain.Produto;
 import br.com.mc.cursomc.domain.enums.EstadoPagamento;
+import br.com.mc.cursomc.domain.enums.PerfilCliente;
 import br.com.mc.cursomc.domain.enums.TipoCliente;
 import br.com.mc.cursomc.utils.TestUtils;
 
@@ -152,7 +153,7 @@ public class DBService {
 		ciddao.saveAll(estInst.get("RJ").getCidades());
 		
 		
-		Cliente cli1 = new Cliente(null, "José Antônio Santos", "mauriciocz@hotmail.com", "11111111111", TipoCliente.PESSOAFISICA, passEnc.encode("1234"));
+		Cliente cli1 = new Cliente(null, "José Antônio Santos", "jas@hotmail.com", "11111111111", TipoCliente.PESSOAFISICA, passEnc.encode("1234"));
 		cli1.getTelefones().addAll(Arrays.asList("(11) 99999-9999", "(11) 2323-2323"));
 
 		Endereco end1 = new Endereco(null, "Rua Um", "1", null, "Bairro 1", "01111-001", cid11, cli1);
@@ -161,8 +162,16 @@ public class DBService {
 		cli1.getEnderecos().add(end1);
 		cli1.getEnderecos().add(end2);
 		
-		clidao.save(cli1);
-		enddao.saveAll(cli1.getEnderecos());
+		
+		Cliente cli2 = new Cliente(null, "Marcos Correia", "mc021970@bol.com.br", "22222222222", TipoCliente.PESSOAFISICA, passEnc.encode("1q2w3e4r"));
+		cli2.getTelefones().addAll(Arrays.asList("(11) 98888-8888", "(11) 2222-2222"));
+		cli2.addPerfil(PerfilCliente.ADMIN);
+		Endereco end3 = new Endereco(null, "Rua Três", "3", null, "Bairro 3", "03333-003", cid1, cli2);
+		
+		cli2.getEnderecos().add(end3);
+		
+		clidao.saveAll(Arrays.asList(cli1, cli2));
+		enddao.saveAll(Arrays.asList(end1, end2, end3));
 		
 		
 		Pedido ped1 = new Pedido(null, new Date(), cli1, end2);
