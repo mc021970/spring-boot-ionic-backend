@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.TreeMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import br.com.mc.cursomc.dao.CategoriaDAO;
@@ -52,6 +53,9 @@ public class DBService {
 	PagamentoDAO pagdao;
 	@Autowired
 	ItemPedidoDAO itemdao;
+	
+	@Autowired
+	private BCryptPasswordEncoder passEnc;
 	
 
 	public void initTestDB() throws Exception {
@@ -148,7 +152,7 @@ public class DBService {
 		ciddao.saveAll(estInst.get("RJ").getCidades());
 		
 		
-		Cliente cli1 = new Cliente(null, "José Antônio Santos", "mauriciocz@hotmail.com", "11111111111", TipoCliente.PESSOAFISICA);
+		Cliente cli1 = new Cliente(null, "José Antônio Santos", "mauriciocz@hotmail.com", "11111111111", TipoCliente.PESSOAFISICA, passEnc.encode("1234"));
 		cli1.getTelefones().addAll(Arrays.asList("(11) 99999-9999", "(11) 2323-2323"));
 
 		Endereco end1 = new Endereco(null, "Rua Um", "1", null, "Bairro 1", "01111-001", cid11, cli1);
