@@ -17,9 +17,12 @@ import br.com.mc.cursomc.dao.EnderecoDAO;
 import br.com.mc.cursomc.domain.Cidade;
 import br.com.mc.cursomc.domain.Cliente;
 import br.com.mc.cursomc.domain.Endereco;
+import br.com.mc.cursomc.domain.enums.PerfilCliente;
 import br.com.mc.cursomc.domain.enums.TipoCliente;
 import br.com.mc.cursomc.dto.ClienteDTO;
 import br.com.mc.cursomc.dto.ClienteNewDTO;
+import br.com.mc.cursomc.security.UserSS;
+import br.com.mc.cursomc.services.exception.CustomAuthorizationException;
 import br.com.mc.cursomc.services.exception.DataIntegrityException;
 import br.com.mc.cursomc.services.exception.ObjectNotFoundException;
 
@@ -36,8 +39,14 @@ public class ClienteService {
 	private BCryptPasswordEncoder passEnc;
 	
 	public Cliente find(Integer id) {
-		 Optional<Cliente> obj = dao.findById(id);
-		 return obj.orElseThrow(() -> new ObjectNotFoundException(
+		
+		UserSS user = UserService.authenticated();
+		System.out.println("ClienteService.find: " + id + ", user: " + user);
+		if (user == null || (!user.hasRole(PerfilCliente.ADMIN) && !id.equals(user.getId()))) {
+			throw new CustomAuthorizationException("Acesso Negado");
+		}
+		Optional<Cliente> obj = dao.findById(id);
+		return obj.orElseThrow(() -> new ObjectNotFoundException(
 		  "Objeto não encontrado! Id: " + id + ", Tipo: " + Cliente.class.getName()));
 	}
 	
