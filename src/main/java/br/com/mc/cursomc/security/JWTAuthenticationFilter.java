@@ -39,14 +39,14 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 			throws AuthenticationException {
 		try {
 			CredenciaisDTO cdto = new ObjectMapper().readValue(request.getInputStream(), CredenciaisDTO.class);
-			System.out.println("Filtro: Recebeu: " + cdto.getEmail());
+			System.out.println("AuthentcationFilter: Recebeu: " + cdto.getEmail());
 			UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(cdto.getEmail(), cdto.getSenha(), new ArrayList<>());
-			System.out.println("Filtro: token: " + token);
+			System.out.println("AuthentcationFilter: token: " + token);
 			Authentication auth = authman.authenticate(token);
-			System.out.println("Filtro: auth: " + auth);
+			System.out.println("AuthentcationFilter: auth: " + auth);
 			return auth;
 		} catch (IOException e) {
-			System.out.println("Filtro: Erro: " + e.getMessage());
+			System.out.println("AuthentcationFilter: Erro: " + e.getMessage());
 			throw new RuntimeException(e);
 		}
 	}
@@ -54,7 +54,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	@Override
 	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
 			Authentication authResult) throws IOException, ServletException {
-		System.out.println("Filtro: principal: " + authResult.getName() + ", " + authResult.getPrincipal());
+		System.out.println("AuthentcationFilter: principal: " + authResult.getName() + ", " + authResult.getPrincipal());
 		String username = ((UserSS) authResult.getPrincipal()).getUsername();
 		String token = ju.generateToken(username);
 		response.addHeader("Authorization", "Bearer " + token);
