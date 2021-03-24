@@ -7,16 +7,23 @@ import java.util.Optional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.mc.cursomc.dao.ItemPedidoDAO;
 import br.com.mc.cursomc.dao.PagamentoDAO;
 import br.com.mc.cursomc.dao.PedidoDAO;
+import br.com.mc.cursomc.domain.Cliente;
 import br.com.mc.cursomc.domain.ItemPedido;
 import br.com.mc.cursomc.domain.PagamentoBoleto;
 import br.com.mc.cursomc.domain.Pedido;
 import br.com.mc.cursomc.domain.enums.EstadoPagamento;
+import br.com.mc.cursomc.domain.enums.PerfilCliente;
+import br.com.mc.cursomc.security.UserSS;
+import br.com.mc.cursomc.services.exception.CustomAuthorizationException;
 import br.com.mc.cursomc.services.exception.ObjectNotFoundException;
 
 @Service
@@ -45,8 +52,23 @@ public class PedidoService {
 	
 	
 	
-	public Pedido buscar(Integer id) {
-		 Optional<Pedido> obj = dao.findById(id);
+	public Pedido find(Integer id) {
+		UserSS user = UserService.authenticated();
+		System.out.println("PedidoService.find: " + id + ", user: " + user);
+		if (user == null) {
+			throw new CustomAuthorizationException("Acesso Negado");
+		}
+		
+		Optional<Pedido> obj = dao.findById(id);
+		if (!user.hasRole(PerfilCliente.ADMIN)) {
+			if (obj.isPresent()) {
+				Pedido p = obj.get();
+				if (p.getCliente().getId() != user.getId()) {
+					throw new CustomAuthorizationException("Acesso Negado");
+				}
+			}
+		}
+		 
 		 return obj.orElseThrow(() -> new ObjectNotFoundException(
 		  "Objeto não encontrado! Id: " + id + ", Tipo: " + Pedido.class.getName()));
 	}
@@ -85,5 +107,19 @@ public class PedidoService {
 		System.out.println("Inseriu Pedido: " + pedido);
 		emailserv.sendOrderConfirmationHtmlEmail(pedido);
 		return pedido;
+	}
+	
+
+	
+	public Page<Pedido> findPage(Integer page, Integer linesPerPage, String orderBy, String direction) {
+		
+		UserSS user = UserService.authenticated();
+		System.out.println("PedidoService.findPage: " + user);
+		if (user == null) {
+			throw new CustomAuthorizationException("Acesso Negado");
+		}
+		Cliente cliente = cliserv.find(user.getId());
+		PageRequest pr = PageRequest.of(page, linesPerPage, Direction.fromString(direction), orderBy);
+		return dao.findByCliente(cliente, pr);
 	}
 }

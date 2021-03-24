@@ -39,7 +39,7 @@ public class ResourceExceptionHandler {
 
 	@ExceptionHandler(CustomAuthorizationException.class)
 	public ResponseEntity<StandardError> authorization(CustomAuthorizationException e, HttpServletRequest request) {
-		StandardError error = new StandardError(HttpStatus.NOT_FOUND.value(), e.getMessage(), System.currentTimeMillis());
+		StandardError error = new StandardError(HttpStatus.FORBIDDEN.value(), e.getMessage(), System.currentTimeMillis());
 		return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
 	}
 }
