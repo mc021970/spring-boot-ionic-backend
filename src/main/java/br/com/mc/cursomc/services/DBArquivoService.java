@@ -18,8 +18,8 @@ public class DBArquivoService implements ArquivoService {
 	private ArquivoDAO arqdao;
 
 	@Override
-	public String getFileAccessPath() {
-		return "/arquivos";
+	public String getFileAccessPath(Arquivo arq) {
+		return "/clientes/foto";
 	}
 
 

@@ -1,6 +1,7 @@
 package br.com.mc.cursomc.resources;
 
 import java.net.URI;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,6 +10,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -113,12 +115,22 @@ public class ClienteResource {
 			}
 			arquivo = arqserv.uploadFile(arquivo);
 			System.out.println("Clientes: Foto: " + arquivo);
-			URI uri = ServletUriComponentsBuilder.fromPath(arqserv.getFileAccessPath() + "/{id}").buildAndExpand(arquivo.getId()).toUri();
+			URI uri = ServletUriComponentsBuilder.fromPath(arqserv.getFileAccessPath(arquivo)).build().toUri();
 			return ResponseEntity.created(uri).build();
 		}
 		catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
+	}
+	
+
+
+	@GetMapping("/foto")
+	public ResponseEntity<byte[]> getPicture() {
+		UserSS user = UserService.authenticated();
+		Arquivo arq = arqserv.find(user.getId());
+		String mimeType = URLConnection.guessContentTypeFromName(arq.getNome());
+		return ResponseEntity.ok().contentType(MediaType.parseMediaType(mimeType)).body(arq.getConteudo());
 	}
 	
 }

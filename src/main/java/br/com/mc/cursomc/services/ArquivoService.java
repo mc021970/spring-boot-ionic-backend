@@ -4,7 +4,7 @@ import br.com.mc.cursomc.domain.Arquivo;
 
 public interface ArquivoService {
 
-	String getFileAccessPath();
+	String getFileAccessPath(Arquivo arq);
 	
 	Arquivo uploadFile(Arquivo arq);
 	
