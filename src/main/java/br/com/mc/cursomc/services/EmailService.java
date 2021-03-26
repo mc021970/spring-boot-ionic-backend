@@ -11,6 +11,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
+import br.com.mc.cursomc.domain.Cliente;
 import br.com.mc.cursomc.domain.Pedido;
 
 public interface EmailService {
@@ -69,6 +70,23 @@ public interface EmailService {
 		return mm;
 	}
 
+	default void sendNewPasswordEmail(Cliente cliente, String newPass) {
+		SimpleMailMessage sm = prepareEMailNovaSenha(cliente, newPass);
+		sendMail(sm);
+	}
+	
+	default SimpleMailMessage prepareEMailNovaSenha(Cliente cliente, String newPass) {
+		String sender = getSender();
+		System.out.println("Sender: " + sender);
+		SimpleMailMessage sm = new SimpleMailMessage();
+		sm.setTo(cliente.getEmail());
+		sm.setFrom(sender);
+		sm.setSubject("Senha atualizada");
+		sm.setSentDate(new Date());
+		sm.setText("Sua nova senha é: " + newPass + "\nLembre-se de trocá-la no próximo acesso.");
+		return sm;
+	}
+	
 	void sendMail(SimpleMailMessage msg);
 	
 	void sendHtmlEmail(MimeMessage msg) throws Exception;
