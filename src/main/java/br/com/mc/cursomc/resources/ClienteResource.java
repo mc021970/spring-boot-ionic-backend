@@ -8,6 +8,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,12 +20,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import br.com.mc.cursomc.domain.Arquivo;
 import br.com.mc.cursomc.domain.Cliente;
 import br.com.mc.cursomc.dto.ClienteDTO;
 import br.com.mc.cursomc.dto.ClienteNewDTO;
+import br.com.mc.cursomc.security.UserSS;
+import br.com.mc.cursomc.services.ArquivoService;
 import br.com.mc.cursomc.services.ClienteService;
+import br.com.mc.cursomc.services.UserService;
 
 @RestController
 @RequestMapping(value="/clientes")
@@ -32,6 +38,9 @@ public class ClienteResource {
 
 	@Autowired
 	private ClienteService cliserv;
+
+	@Autowired
+	private ArquivoService arqserv;
 	
 	
 
@@ -92,6 +101,24 @@ public class ClienteResource {
 		System.out.println("Clientes: Removendo: " + id);
 		cliserv.delete(id);
 		return ResponseEntity.noContent().build();
+	}
+	
+	@PostMapping("/foto")
+	public ResponseEntity<String> uploadPicture(@RequestParam(name = "arquivo") MultipartFile arqParam) {
+		UserSS user = UserService.authenticated();
+		try {
+			Arquivo arquivo = new Arquivo(user.getId(), arqParam.getOriginalFilename(), arqParam.getBytes());
+			if (arquivo.getConteudo().length > Arquivo.LIMITE) {
+				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("O tamanho da imagem não pode ser maior que " + arquivo.LIMITE);
+			}
+			arquivo = arqserv.uploadFile(arquivo);
+			System.out.println("Clientes: Foto: " + arquivo);
+			URI uri = ServletUriComponentsBuilder.fromPath(arqserv.getFileAccessPath() + "/{id}").buildAndExpand(arquivo.getId()).toUri();
+			return ResponseEntity.created(uri).build();
+		}
+		catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
 	}
 	
 }
