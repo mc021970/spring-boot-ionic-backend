@@ -12,15 +12,15 @@ import javax.validation.constraints.Size;
 public class Arquivo implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
-	public static final int LIMITE = 65535;
+	public static final int LIMITE = 1048576;
 
 	@Id
 	private Integer id;
 	private String nome;
 	
 	@Lob
-	@Column(length = 65535)
-	@Size(max = 65535)
+	@Column(length = 1048576)
+	@Size(max = 1048576)
 	private byte[] conteudo;
 	
 	public Arquivo() {

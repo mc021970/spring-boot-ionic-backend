@@ -10,21 +10,21 @@ import br.com.mc.cursomc.dao.ArquivoDAO;
 import br.com.mc.cursomc.domain.Arquivo;
 import br.com.mc.cursomc.services.exception.ObjectNotFoundException;
 
-public class DBArquivoService implements ArquivoService {
+public class DBImagemService implements ImagemService {
 	
-	private static final Logger log = LoggerFactory.getLogger(DBArquivoService.class);
+	private static final Logger log = LoggerFactory.getLogger(DBImagemService.class);
 
 	@Autowired
 	private ArquivoDAO arqdao;
 
 	@Override
-	public String getFileAccessPath(Arquivo arq) {
+	public String getCaminhoImagem(Arquivo arq) {
 		return "/clientes/foto";
 	}
 
 
 	@Override
-	public Arquivo uploadFile(Arquivo arq) {
+	public Arquivo guardarImagem(Arquivo arq) {
 		log.info("Iniciando upload: " + arq);
 		Arquivo a1 = arqdao.save(arq);
 		log.info("Upload concluído: " + a1);
@@ -33,18 +33,10 @@ public class DBArquivoService implements ArquivoService {
 
 
 	@Override
-	public Arquivo find(Integer id) {
+	public Arquivo obterImagem(Integer id) {
 		Optional<Arquivo> obj = arqdao.findById(id);
 		return obj.orElseThrow(() -> new ObjectNotFoundException(
 				  "Objeto não encontrado! Id: " + id + ", Tipo: " + Arquivo.class.getName()));
-	}
-
-
-	@Override
-	public Arquivo findByNome(String nome) {
-		Optional<Arquivo> obj = arqdao.findByNome(nome);
-		return obj.orElseThrow(() -> new ObjectNotFoundException(
-				  "Objeto não encontrado! nome: " + nome + ", Tipo: " + Arquivo.class.getName()));
 	}
 
 }

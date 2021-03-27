@@ -1,5 +1,7 @@
 package br.com.mc.cursomc.resources;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.net.URI;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -7,6 +9,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -30,8 +33,8 @@ import br.com.mc.cursomc.domain.Cliente;
 import br.com.mc.cursomc.dto.ClienteDTO;
 import br.com.mc.cursomc.dto.ClienteNewDTO;
 import br.com.mc.cursomc.security.UserSS;
-import br.com.mc.cursomc.services.ArquivoService;
 import br.com.mc.cursomc.services.ClienteService;
+import br.com.mc.cursomc.services.ImagemService;
 import br.com.mc.cursomc.services.UserService;
 
 @RestController
@@ -42,7 +45,7 @@ public class ClienteResource {
 	private ClienteService cliserv;
 
 	@Autowired
-	private ArquivoService arqserv;
+	private ImagemService imgserv;
 	
 	
 
@@ -109,16 +112,24 @@ public class ClienteResource {
 	public ResponseEntity<String> uploadPicture(@RequestParam(name = "arquivo") MultipartFile arqParam) {
 		UserSS user = UserService.authenticated();
 		try {
-			Arquivo arquivo = new Arquivo(user.getId(), arqParam.getOriginalFilename(), arqParam.getBytes());
-			if (arquivo.getConteudo().length > Arquivo.LIMITE) {
-				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("O tamanho da imagem não pode ser maior que " + arquivo.LIMITE);
+
+			System.out.println("Clientes: foto: " + arqParam.getOriginalFilename() + ", tam.: " + arqParam.getSize() + ", limite: " + Arquivo.LIMITE);
+			if (arqParam.getSize() > Arquivo.LIMITE) {
+				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("O tamanho da imagem não pode ser maior que " + Arquivo.LIMITE);
 			}
-			arquivo = arqserv.uploadFile(arquivo);
+
+			String ext = FilenameUtils.getExtension(arqParam.getOriginalFilename());
+			byte[] b = imgserv.createProfilePicture(arqParam.getBytes(), ext);
+			
+			Arquivo arquivo = new Arquivo(user.getId(), arqParam.getOriginalFilename(), b);
+			arquivo = imgserv.guardarImagem(arquivo);
 			System.out.println("Clientes: Foto: " + arquivo);
-			URI uri = ServletUriComponentsBuilder.fromPath(arqserv.getFileAccessPath(arquivo)).build().toUri();
+			URI uri = ServletUriComponentsBuilder.fromPath(imgserv.getCaminhoImagem(arquivo)).build().toUri();
 			return ResponseEntity.created(uri).build();
 		}
 		catch (Exception e) {
+			System.out.println("Clientes: Foto: Erro: " + e.getMessage());
+			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
@@ -128,7 +139,7 @@ public class ClienteResource {
 	@GetMapping("/foto")
 	public ResponseEntity<byte[]> getPicture() {
 		UserSS user = UserService.authenticated();
-		Arquivo arq = arqserv.find(user.getId());
+		Arquivo arq = imgserv.obterImagem(user.getId());
 		String mimeType = URLConnection.guessContentTypeFromName(arq.getNome());
 		return ResponseEntity.ok().contentType(MediaType.parseMediaType(mimeType)).body(arq.getConteudo());
 	}
