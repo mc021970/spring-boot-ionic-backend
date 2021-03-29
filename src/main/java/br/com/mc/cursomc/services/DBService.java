@@ -1,5 +1,6 @@
 package br.com.mc.cursomc.services;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.TreeMap;
@@ -89,8 +90,20 @@ public class DBService {
 		Produto p7 = new Produto(null, "Luminária LED USB", "Luminária LED USB", 39.99);
 		addCategorias(p7, cat1, cat5, cat10);
 		
+		
+		ArrayList<Produto> prods = new ArrayList<>();
+		prods.addAll(Arrays.asList(p1, p2, p3, p4, p5, p6, p7));
+		
+		for (int i = 1; i <= 100; i++) {
+			Produto p = new Produto(null, "Produto " + i, "Produto " + i, 100 + i);
+			p.getCategorias().add(cat1);
+			cat1.getProdutos().add(p);
+			prods.add(p);
+		}
+		
+		
 		catdao.saveAll(Arrays.asList(cat1, cat2, cat3, cat4, cat5, cat6, cat7, cat8, cat9, cat10));
-		proddao.saveAll(Arrays.asList(p1, p2, p3, p4, p5, p6, p7));
+		proddao.saveAll(prods);
 		
 		TreeMap<String, String> estados = new TreeMap<>();
 		estados.put("AC", "Acre");
