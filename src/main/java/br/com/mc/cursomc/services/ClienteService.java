@@ -50,6 +50,20 @@ public class ClienteService {
 		  "Objeto não encontrado! Id: " + id + ", Tipo: " + Cliente.class.getName()));
 	}
 	
+	public Cliente findByEmail(String email) {
+		UserSS user = UserService.authenticated();
+		System.out.println("ClienteService.findByEmail: " + email + ", user: " + user);
+		if (user == null || (!user.hasRole(PerfilCliente.ADMIN) && !email.equals(user.getUsername()))) {
+			throw new CustomAuthorizationException("Acesso Negado");
+		}
+		Cliente c = dao.findByEmail(email);
+		if (c == null) {
+			throw new ObjectNotFoundException("Objeto não encontrado! email: " + email + ", Tipo: " + Cliente.class.getName());
+		}
+		
+		return c;
+	}
+	
 	public List<Cliente> findAll() {
 		return dao.findAll();
 	}

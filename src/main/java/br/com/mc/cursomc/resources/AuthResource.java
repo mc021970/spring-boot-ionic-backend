@@ -34,6 +34,7 @@ public class AuthResource {
 		System.out.println("AuthResource: refreshToken: " + user);
 		String token = ju.generateToken(user.getUsername());
 		response.addHeader("Authorization", "Bearer " + token);
+		response.addHeader("access-control-expose-headers", "Authorization");
 		return ResponseEntity.noContent().build();
 	}
 
