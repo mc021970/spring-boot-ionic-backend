@@ -28,7 +28,7 @@
 				<th>Preço unitário</th>
 				<th>Subtotal</th>
 			</tr>
-			<tr th:each="item : ${pedido.itens}">
+			<tr th:each="item : ${pedido.items}">
 				<td th:text="${item.produto.nome}">nome</td>
 				<td th:text="${item.quantidade}">quantidade</td>
 				<td

@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import br.com.mc.cursomc.domain.enums.EstadoPagamento;
 
 @Entity
-@JsonTypeName("pagamentoComBoleto")
+@JsonTypeName("PagamentoBoleto")
 public class PagamentoBoleto extends Pagamento {
 	private static final long serialVersionUID = 1L;
 

@@ -96,14 +96,14 @@ public class PedidoService {
 		pedido = dao.save(pedido);
 		pagdao.save(pedido.getPagamento());
 		
-		for (ItemPedido item : pedido.getItens()) {
+		for (ItemPedido item : pedido.getItems()) {
 			item.setDesconto(0);
 			item.setProduto(prodserv.buscar(item.getProduto().getId()));
 			item.setPreco(item.getProduto().getPreco());
 			item.setPedido(pedido);
 		}
 		
-		itemdao.saveAll(pedido.getItens());
+		itemdao.saveAll(pedido.getItems());
 		System.out.println("Inseriu Pedido: " + pedido);
 		emailserv.sendOrderConfirmationHtmlEmail(pedido);
 		return pedido;

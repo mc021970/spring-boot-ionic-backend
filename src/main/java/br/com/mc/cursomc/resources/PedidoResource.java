@@ -41,11 +41,15 @@ public class PedidoResource {
 		Pedido cli = pedserv.find(id);
 		return ResponseEntity.ok(cli);
 	}
+	
+	//public ResponseEntity<Void> insert(@Valid @RequestBody Pedido pedido) {
+	//public ResponseEntity<Void> insert(@RequestBody String spedido) throws JsonMappingException, JsonProcessingException {
 
-	@PreAuthorize("hasAnyRole('ADMIN')")
 	@PostMapping
 	public ResponseEntity<Void> insert(@Valid @RequestBody Pedido pedido) {
 		System.out.println("Pedidos: Criando: " + pedido);
+		//ObjectMapper om = new ObjectMapper();
+		//Pedido pedido = om.readValue(spedido, Pedido.class);
 		Pedido pedNovo = pedserv.insert(pedido);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(pedNovo.getId()).toUri();
 		return ResponseEntity.created(uri).build();

@@ -209,14 +209,14 @@ public class DBService {
 		
 		ItemPedido item4 = new ItemPedido(ped2, p2, 0.05, 2, p2.getPreco());
 		
-		ped1.getItens().addAll(Arrays.asList(item1, item2, item3));
-		ped2.getItens().addAll(Arrays.asList(item4));
+		ped1.getItems().addAll(Arrays.asList(item1, item2, item3));
+		ped2.getItems().addAll(Arrays.asList(item4));
 		System.out.println("Ped1 Total: " + ped1.getTotal());
 		System.out.println("Ped2 Total: " + ped2.getTotal());
 		
-		p1.getItens().add(item1);
-		p2.getItens().addAll(Arrays.asList(item2, item4));
-		p3.getItens().add(item3);
+		p1.getItems().add(item1);
+		p2.getItems().addAll(Arrays.asList(item2, item4));
+		p3.getItems().add(item3);
 		
 		System.out.println(ped1);
 		System.out.println(ped2);

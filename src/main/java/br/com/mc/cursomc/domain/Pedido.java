@@ -40,10 +40,10 @@ public class Pedido implements Serializable {
 	
 	@ManyToOne
 	@JoinColumn(name = "endereco_entrega_id")
-	private Endereco enderecoEntrega;
+	private Endereco enderecoDeEntrega;
 	
 	@OneToMany(mappedBy = "id.pedido")
-	private Set<ItemPedido> itens = new HashSet<>();
+	private Set<ItemPedido> items = new HashSet<>();
 
 	public Pedido() {
 		super();
@@ -54,7 +54,7 @@ public class Pedido implements Serializable {
 		this.id = id;
 		this.instante = instante;
 		this.cliente = cliente;
-		this.enderecoEntrega = enderecoEntrega;
+		this.enderecoDeEntrega = enderecoEntrega;
 	}
 
 	public Integer getId() {
@@ -89,12 +89,12 @@ public class Pedido implements Serializable {
 		this.cliente = cliente;
 	}
 
-	public Endereco getEnderecoEntrega() {
-		return enderecoEntrega;
+	public Endereco getEnderecoDeEntrega() {
+		return enderecoDeEntrega;
 	}
 
-	public void setEnderecoEntrega(Endereco enderecoEntrega) {
-		this.enderecoEntrega = enderecoEntrega;
+	public void setEnderecoDeEntrega(Endereco enderecoEntrega) {
+		this.enderecoDeEntrega = enderecoEntrega;
 	}
 
 	@Override
@@ -107,7 +107,7 @@ public class Pedido implements Serializable {
 
 	public double getTotal() {
 		double total = 0;
-		for (ItemPedido item : itens) {
+		for (ItemPedido item : items) {
 			total += item.getSubTotal();
 		}
 		return total;
@@ -130,12 +130,12 @@ public class Pedido implements Serializable {
 		return true;
 	}
 
-	public Set<ItemPedido> getItens() {
-		return itens;
+	public Set<ItemPedido> getItems() {
+		return items;
 	}
 
-	public void setItens(Set<ItemPedido> itens) {
-		this.itens = itens;
+	public void setItems(Set<ItemPedido> items) {
+		this.items = items;
 	}
 
 	@Override
@@ -152,7 +152,7 @@ public class Pedido implements Serializable {
 		builder.append(", Pagamento: ");
 		builder.append(this.getPagamento().getEstado());
 		builder.append("\nItens:\n");
-		getItens().forEach(builder::append);
+		getItems().forEach(builder::append);
 		builder.append("Total do Pedido:");
 		builder.append(nf.format(this.getTotal()));
 		return builder.toString();

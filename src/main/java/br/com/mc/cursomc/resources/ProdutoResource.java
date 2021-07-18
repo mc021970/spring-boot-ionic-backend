@@ -28,7 +28,7 @@ public class ProdutoResource {
 	@Autowired
 	private ProdutoService prodserv;
 
-	@GetMapping
+	@GetMapping("/all")
 	public List<Produto> findAll() {
 		System.out.println("Produtos: buscando todos");
 		return prodserv.todos();
@@ -41,7 +41,7 @@ public class ProdutoResource {
 		return ResponseEntity.ok(cli);
 	}
 
-	@GetMapping("/page")
+	@GetMapping
 	public ResponseEntity<Page<ProdutoDTO>> findPage(
 			@RequestParam(name = "nome", defaultValue = "") String nome, 
 			@RequestParam(name = "categorias", defaultValue = "0") String categorias, 
@@ -49,7 +49,7 @@ public class ProdutoResource {
 			@RequestParam(name = "linesPerPage", defaultValue = "24") Integer linesPerPage, 
 			@RequestParam(name = "orderBy", defaultValue = "nome") String orderBy, 
 			@RequestParam(name = "direction", defaultValue = "ASC") String direction) {
-		System.out.println("Produtos: buscando pagina");
+		System.out.println("Produtos: buscando pagina: nome: " + nome + ", categorias: " + categorias);
 		List<Integer> catIds = Arrays.asList(categorias.split(",")).stream().map(x -> Integer.parseInt(x)).collect(Collectors.toList());
 		Page<Produto> lista = prodserv.search(UriUtils.decode(nome, "UTF-8"), catIds, page, linesPerPage, orderBy, direction);
 		Page<ProdutoDTO> listadto = lista.map(prod -> new ProdutoDTO(prod));
